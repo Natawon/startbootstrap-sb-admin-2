@@ -486,17 +486,47 @@ if($stmt->execute(['uid'=>$_SESSION['user']]))
 
                      $response4        = [];
                      $response4['data'] =  $data_total3;
+
+
+                     $sql_total4 = "SELECT * FROM snapshot";
+                     $stmt_total4 = $conn->prepare($sql_total4);
+                     $stmt_total4->execute();                
+                     $data_total4 = [];
+ 
+                     while ($row_total4 = $stmt_total4->fetch(PDO::FETCH_ASSOC)) {          
+                         $data_total4[] = $row_total4;  
+                     } 
+ 
+                      $response4        = [];
+                      $response4['data'] =  $data_total4;
+
+
+                     $sql_total5 = "SELECT * FROM droplet ORDER BY  id DESC Limit 1 ";
+                     $stmt_total5 = $conn->prepare($sql_total5);
+                     $stmt_total5->execute();                
+                     $data_total5 = [];
+ 
+                     while ($row_total5 = $stmt_total5->fetch(PDO::FETCH_ASSOC)) {          
+                         $data_total5[] = $row_total5;  
+                     } 
+ 
+                      $response5        = [];
+                      $response5['data'] =  $data_total5;
                           
                 ?>
 
                 <!-- End of Topbar -->
                 <div class="container-fluid">
 
+                
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+
+                        <a href="manage_data.php" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                                class="fas fa-plus fa-sm text-white-50"></i> Manage Data</a>
+                        <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> -->
                     </div>
 
                     <!-- Content Row -->
@@ -588,35 +618,76 @@ if($stmt->execute(['uid'=>$_SESSION['user']]))
                                 <span class="stats-small__label text-uppercase">Digitalocean</span>
                                  
                                 <?php 
-                                                foreach ($data as $key => $row) 
+                                                foreach ($data_total5 as $key5 => $row5) 
                                                 {
             
                                                 ?>
-                                            <div><h6 class="stats-small__value count my-3"><?php echo "35";?></h6></div>
+                                            <div><h6 class="stats-small__value count my-3"><?php echo $row5["total"];?></h6></div>
+                                                <?php }                                                    
+                                                ?>
+                                               
+                                              
+                                            <?php
+                                            // echo $a;
+                                            // echo $last_data;
+                                            $percentage2 = (($last_data2 - $a2) / $a2) * 100;
+                                            ?>
+                                             
+                                <!-- <h6 class="stats-small__value count my-3">2,390</h6> -->
+                            </div>
+                            <div class="stats-small__data">
+                              <span style="text-align:center; font-size:0.7em;">Droplet</span>
+
+                            </div>
+                            </div>
+                            <?php
+                               if(round($percentage2,2) >= 0){
+                                echo "<canvas height='120' class='blog-overview-stats-small-1'></canvas>";
+                               }else{
+                                echo "<canvas height='120' class='blog-overview-stats-small-2'></canvas>";
+                               }
+                            ?>
+                        </div>
+                        </div>
+                    </div>
+                        
+                    <div class="col-lg col-md-6 col-sm-6 mb-4">
+                        <div class="stats-small stats-small--1 card card-small">
+                        <div class="card-body p-0 d-flex">
+                            <div class="d-flex flex-column m-auto">
+                            <div class="stats-small__data text-center">
+                                <span class="stats-small__label text-uppercase">Digitalocean</span>
+                                 
+                                <?php 
+                                                foreach ($data  as $key => $row) 
+                                                {
+            
+                                                ?>
+                                            <div><h6 class="stats-small__value count my-3"><?php echo "36.85 TB";?></h6></div>
                                                 <?php }                                                    
                                                 ?>
                                                 <?php 
                                                 $sum =0 ;
-                                                $last_index = count($data_total) - 2;
+                                                $last_index = count($data_total3) - 2;
 
                                                 // echo json_encode($data, JSON_PRETTY_PRINT);  
                                                 foreach ($data_total as $key => $row_totals) 
                                                 {
                                                     
                                                     // $sum +=$row_totals['costs'];
-                                                    $last_data = end($row_totals);
+                                                    $last_data3 = end($row_totals3);
                                                     // $before_last_key = prev($row_totals);
                                                     if ($key === $last_index) {
-                                                        $a = $row_totals['costs'];
+                                                        $a3 = $row_totals3['costs'];
                                                         // echo $a;
-                                                        $b = $last_data;
+                                                        $b3 = $last_data3;
                                                         // echo $b;
 
-                                                        $percentage = ($a / $b) * 100;
+                                                        $percentage3 = ($a3 / $b3) * 100;
                                                         // echo"<div class='caption fw-500 me-2'><i class='fa fa-arrow-up'></i>$percentage%  from last month</div>";
                                                     }
                                                     
-                                                    $sum += $row_totals['costs'];
+                                                    $sum3 += $row_totals3['costs'];
 
                                                     // echo $lastElement;
 
@@ -630,69 +701,67 @@ if($stmt->execute(['uid'=>$_SESSION['user']]))
                                             <?php
                                             // echo $a;
                                             // echo $last_data;
-                                            $percentage = (($last_data - $a) / $a) * 100;
+                                            $percentage3 = (($last_data3 - $a3) / $a3) * 100;
                                             ?>
                                              
                                 <!-- <h6 class="stats-small__value count my-3">2,390</h6> -->
                             </div>
                             <div class="stats-small__data">
-                              <span style="text-align:center; font-size:0.7em;">Droplet</span>
+                              <span style="text-align:center; font-size:0.7em;">Bandwidth</span>
 
                             </div>
                             </div>
                             <?php
-                               if(round($percentage,2) >= 0){
-                                echo "<canvas height='120' class='blog-overview-stats-small-1'></canvas>";
+                               if(round($percentage3,2) >= 0){
+                                echo "<canvas height='120' class='blog-overview-stats-small-4'></canvas>";
                                }else{
-                                echo "<canvas height='120' class='blog-overview-stats-small-2'></canvas>";
+                                echo "<canvas height='120' class='blog-overview-stats-small-1'></canvas>";
                                }
                             ?>
                         </div>
                         </div>
                     </div>
-                        
 
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-info shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">Bandwidth (Month)
-                                            </div>
-                                            <?php 
-                                                foreach ($stmt2 as $key2 => $row2) 
+                    
+                    <div class="col-lg col-md-6 col-sm-6 mb-4">
+                        <div class="stats-small stats-small--1 card card-small">
+                        <div class="card-body p-0 d-flex">
+                            <div class="d-flex flex-column m-auto">
+                            <div class="stats-small__data text-center">
+                                <span class="stats-small__label text-uppercase">Digitalocean</span>
+                                 
+                                <?php 
+                                                foreach ($data as $key => $row) 
                                                 {
             
                                                 ?>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"> <?php echo $row2['usage'];?> TB</div>
+                                            <div><h6 class="stats-small__value count my-3"><?php echo "70 TB";?></h6></div>
                                                 <?php }                                                    
                                                 ?>
                                                 <?php 
-                                                $sum2 =0 ;
-                                                $last_index2 = count($data_total2) - 2;
-                                                    // print_r($stmt2);
+                                                $sum =0 ;
+                                                $last_index = count($data_total3) - 2;
+
                                                 // echo json_encode($data, JSON_PRETTY_PRINT);  
-                                                foreach ($data_total2 as $key => $row_totals2) 
+                                                foreach ($data_total as $key => $row_totals4) 
                                                 {
                                                     
                                                     // $sum +=$row_totals['costs'];
-                                                    $last_data2 = end($row_totals2);
-                                                    // echo $last_data2;
+                                                    $last_data4 = end($row_totals4);
                                                     // $before_last_key = prev($row_totals);
-                                                    if ($key === $last_index2) {
-                                                        $a2 = $row_totals2['usage'];
+                                                    if ($key === $last_index) {
+                                                        $a4 = $row_totals4['costs'];
                                                         // echo $a;
-                                                        $b2 = $last_data2;
+                                                        $b4 = $last_data4;
                                                         // echo $b;
 
-                                                        $percentage2 = ($a2 / $b2) * 100;
-                                                        
+                                                        $percentage4 = ($a4 / $b4) * 100;
                                                         // echo"<div class='caption fw-500 me-2'><i class='fa fa-arrow-up'></i>$percentage%  from last month</div>";
                                                     }
-                                                    $sum2 += $row_totals2['usage'];
+                                                    
+                                                    $sum4 += $row_totals4['costs'];
 
-                                                    // echo $sum2;
+                                                    // echo $lastElement;
 
                                                     // echo $last_data."\n";
                                                     // echo $last_value."\n";
@@ -704,56 +773,28 @@ if($stmt->execute(['uid'=>$_SESSION['user']]))
                                             <?php
                                             // echo $a;
                                             // echo $last_data;
-                                            $percentage2 = (($last_data2 - $a2) / $a2) * 100;
+                                            $percentage4 = (($last_data4 - $a4) / $a4) * 100;
                                             ?>
-                                            <div class="row no-gutters align-items-center">
-                                                <div class="col-auto">
-                                                    <!-- <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">40.1TB</div> -->
-                                                    <?php
-                                                       if(round($percentage2,2) >= 0)
-                                                       {
-                                                       echo" <div style='color:green' class='caption fw-500 me-2'><i class='fa fa-arrow-up'></i> ". round($percentage2,2)." %  from last month</div>";
-                                                       }else{
-                                                        echo" <div style='color:red' class='caption fw-500 me-2'><i class='fa fa-arrow-down'></i> ". round($percentage2,2)." %  from last month</div>";
-                                                       }
-                                                    ?>
-                                                </div>
-                                                <div class="col">
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                        <i class="fas fa-file fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
+                                             
+                                <!-- <h6 class="stats-small__value count my-3">2,390</h6> -->
                             </div>
-                        </div>
+                            <div class="stats-small__data">
+                              <span style="text-align:center; font-size:0.7em;">Bandwidth (annual)</span>
 
-                        <!-- Pending Requests Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-warning shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
-                                            Bandwidth (Annual)</div>
-                                            
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"> <?php echo $sum2;?> TB</div>
-                                            <!-- <div class="h5 mb-0 font-weight-bold text-gray-800">100TB</div> -->
-                                            <!-- <div class="caption fw-500 me-2"><i class="fa fa-arrow-up"></i><?php echo round($percentage2,2);?>%  from last month</div> -->
-                                        </div>
-                                        <div class="col-auto">
-                                            <!-- <i class="fas fa-comments fa-2x text-gray-300"></i> -->
-                                            <i class="fas fa-tachometer-alt fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
+                            </div>
+                            <?php
+                               if(round($percentage4,2) >= 0){
+                                echo "<canvas height='120' class='blog-overview-stats-small-4'></canvas>";
+                               }else{
+                                echo "<canvas height='120' class='blog-overview-stats-small-2'></canvas>";
+                               }
+                            ?>
+                        </div>
                         </div>
                     </div>
-                </div>
+
+                        
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
@@ -796,58 +837,45 @@ if($stmt->execute(['uid'=>$_SESSION['user']]))
                                     <code>/js/demo/chart-bar-demo.js</code> file. -->
                                 </div>
                             </div>
-
-                            <?php
-                                            $total_transcode1 =16500000;
-                                            $current_progress = 14277410.82;
-                                            $percent = ($current_progress / $total_transcode1) * 100;
-                                            $result= round($percent,2);
-                                            $tb = $current_progress / 1048576; // convert to terabytes
-                                            $formatted_tb = number_format($tb, 2); // format to 2 decimal places
-                                            // echo $formatted_tb; // output the formatted result
-                                            $tb_total = $total_transcode1 / 1048576; // convert to terabytes
-                                            $formatted_tb_total = number_format($tb_total, 2); // format to 2 decimal places
-                                            // echo $formatted_tb_total; // output the formatted result
-
-                                            $total_transcode2 =16500000;
-                                            $current_progress2 = 12915259.66;
-                                            $percent2 = ($current_progress2 / $total_transcode2) * 100;
-                                            $result2= round($percent2,2);
-                                            // echo $result2;
-                                            $tb2 = $current_progress2 / 1048576; // convert to terabytes
-                                            $formatted_tb2 = number_format($tb2, 2); // format to 2 decimal places
-                                            // echo $formatted_tb; // output the formatted result
-                                            $tb_total2 = $total_transcode2 / 1048576; // convert to terabytes
-                                            $formatted_tb_total2 = number_format($tb_total2, 2); // format to 2 decimal places
-                            ?>
+              
+                            
                         </div>
                   
                      
 
                          <div class="card shadow mb-4 col-sm-8 col-md-4">
-                                <div class="card-header py-3">
+                         <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary">Usage Transcode</h6>
                                 </div>
+                         <?php 
+
+                            // echo json_encode($data, JSON_PRETTY_PRINT);  
+                            foreach ($data_total4 as $key => $row_snap) 
+                            {
+                                
+                                $actual_size=$row_snap["actual_size"]/1000;
+                                $size = $row_snap["size"]/1000;
+                                $id = $row_snap["id"];
+                                // $sum +=$row_totals['costs'];
+                                // $last_snap = end($row_snap);
+                                // $before_last_key = prev($row_totals);
+                                // echo $row_snap["name"]."<br>";
+                                // echo $actual_size."TB"."<br>";
+                                // echo $size."TB"."<br>";
+                                $percentage4 = round(($actual_size /$size)  * 100,2);
+                            
+                            ?>
                                 <div class="card-body">
-                                    <h4 class="small font-weight-bold">Transcode1&nbsp;&nbsp; &nbsp;  
-                                        <span class="float-right"><?php echo $result."%";?></span></h4>
-                                            
+                                    <h4 class="small font-weight-bold">Transcode <?php echo $id;?>&nbsp;&nbsp; &nbsp;  
+                                        <!-- <span class="float-right"><?php echo $percentage4."%";?></span></h4>      -->
                                     <div class="progress mb-4">
-                                        <div class="progress-bar bg-info" role="progressbar" style="width: <?php echo $result."%";?>"
-                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-info" role="progressbar" style="width: <?php echo $percentage4."%";?>"
+                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"><?php echo $percentage4."%";?></div>
                                     </div>
-                                    <div class="small font-weight-bold" style="margin-top:-3.8%;"><?php echo $formatted_tb." TB"." ".""."of"." "." ".$formatted_tb_total."".""." TB",""." used";?></div>
-
-                                    <br>
-                                    <h4 class="small font-weight-bold">Transcode2&nbsp;&nbsp; &nbsp; 
-                                    <span class="float-right"><?php echo $result2."%";?></span></h4>
-
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-info" role="progressbar" style="width:<?php echo $result2."%";?>"
-                                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <div class="small font-weight-bold" style="margin-top:-3.8%;"><?php echo $formatted_tb2." TB"." ".""."of"." "." ".$formatted_tb_total2."".""." TB",""." used";?></div>
+                                    <div class="small font-weight-bold" style="margin-top:-3.8%;"><?php echo $actual_size." TB"." ".""."of"." "." ".$size."".""." TB",""." used";?></div>
                                 </div>
+                             <?php }?>      
+                                
                           </div>
                     </div>
                     </div>
